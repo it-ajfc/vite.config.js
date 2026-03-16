@@ -58,6 +58,21 @@ function formatNumber(value, decimalPlaces = 2, useThousandsSeparator = true) {
   }).format(Number.isFinite(value) ? value : 0);
 }
 
+function formatInputNumber(value) {
+  if (value === "" || value === null || value === undefined) return "";
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+    useGrouping: true,
+  }).format(Number(value) || 0);
+}
+
+function parseInputNumber(value) {
+  if (!value) return 0;
+  const cleaned = value.replace(/,/g, "").trim();
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function CurrencyValue({ value, config, large = false }) {
   return (
     <div className={`currency-value ${large ? "currency-large" : ""}`}>
@@ -115,6 +130,29 @@ function SelectInput(props) {
   return <select {...props} className="input-base" />;
 }
 
+function FormattedNumberInput({ value, onChange, placeholder = "" }) {
+  return (
+    <input
+      type="text"
+      className="input-base"
+      dir="ltr"
+      inputMode="decimal"
+      value={formatInputNumber(value)}
+      placeholder={placeholder}
+      onChange={(e) => {
+        const raw = e.target.value.replace(/,/g, "");
+        if (raw === "") {
+          onChange(0);
+          return;
+        }
+        if (/^\d*\.?\d*$/.test(raw)) {
+          onChange(parseInputNumber(raw));
+        }
+      }}
+    />
+  );
+}
+
 function calculateAgeYears(dateStr) {
   if (!dateStr) return 0;
   const today = new Date();
@@ -137,14 +175,11 @@ function calculateEmploymentMonths(dateStr) {
 
 function formatDateDisplay(dateStr) {
   if (!dateStr) return "-";
-
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return dateStr;
-
   const day = String(date.getDate()).padStart(2, "0");
   const month = date.toLocaleString("en-US", { month: "short" });
   const year = String(date.getFullYear()).slice(-2);
-
   return `${day} ${month} ${year}`;
 }
 
@@ -359,10 +394,9 @@ export default function App() {
                 <div className="grid-two">
                   <div>
                     <FieldLabel text="صافي الدخل الشهري" hint="أدخل صافي دخل العميل بعد الاستقطاعات الشهرية." />
-                    <InputBase
-                      type="number"
+                    <FormattedNumberInput
                       value={form.netIncome}
-                      onChange={(e) => setForm({ ...form, netIncome: Number(e.target.value) })}
+                      onChange={(value) => setForm({ ...form, netIncome: value })}
                     />
                   </div>
 
@@ -412,10 +446,9 @@ export default function App() {
                         text="قيمة السيارة بدون ضريبة"
                         hint="القيمة الأساسية قبل احتساب ضريبة القيمة المضافة."
                       />
-                      <InputBase
-                        type="number"
+                      <FormattedNumberInput
                         value={form.carPriceExVat}
-                        onChange={(e) => setForm({ ...form, carPriceExVat: Number(e.target.value) })}
+                        onChange={(value) => setForm({ ...form, carPriceExVat: value })}
                       />
                     </div>
 
@@ -424,28 +457,25 @@ export default function App() {
                         text="الدفعة الأولى"
                         hint="المبلغ الذي سيدفعه العميل مقدمًا ويتم خصمه من مبلغ التمويل."
                       />
-                      <InputBase
-                        type="number"
+                      <FormattedNumberInput
                         value={form.downPayment}
-                        onChange={(e) => setForm({ ...form, downPayment: Number(e.target.value) })}
+                        onChange={(value) => setForm({ ...form, downPayment: value })}
                       />
                     </div>
 
                     <div>
                       <FieldLabel text="رسوم اللوحات" hint="رسوم اللوحات المستخدمة في العملية الحالية." />
-                      <InputBase
-                        type="number"
+                      <FormattedNumberInput
                         value={form.plateFees}
-                        onChange={(e) => setForm({ ...form, plateFees: Number(e.target.value) })}
+                        onChange={(value) => setForm({ ...form, plateFees: value })}
                       />
                     </div>
 
                     <div>
                       <FieldLabel text="رسوم استهلاك طاقة" hint="يمكن إدخال صفر إذا لم توجد رسوم." />
-                      <InputBase
-                        type="number"
+                      <FormattedNumberInput
                         value={form.energyFees}
-                        onChange={(e) => setForm({ ...form, energyFees: Number(e.target.value) })}
+                        onChange={(value) => setForm({ ...form, energyFees: value })}
                       />
                     </div>
 
