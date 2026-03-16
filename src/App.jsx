@@ -307,6 +307,7 @@ export default function App() {
               <div className="user-role">مدير النظام</div>
             </div>
           </div>
+
           <div className="topbar-icons">
             <button>EN</button>
             <Globe size={16} />
@@ -531,11 +532,15 @@ export default function App() {
 
                 <SummaryGroup title="بيانات العميل">
                   <SummaryItem label="تاريخ الميلاد">
-                    <div className="plain-text">{formatDateDisplay(form.dob)}</div>
+                    <div className="plain-text">
+                      <span dir="ltr">{formatDateDisplay(form.dob)}</span>
+                    </div>
                   </SummaryItem>
 
                   <SummaryItem label="تاريخ مزاولة العمل">
-                    <div className="plain-text">{formatDateDisplay(form.employmentDate)}</div>
+                    <div className="plain-text">
+                      <span dir="ltr">{formatDateDisplay(form.employmentDate)}</span>
+                    </div>
                   </SummaryItem>
                 </SummaryGroup>
 
