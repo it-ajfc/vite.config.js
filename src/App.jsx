@@ -269,7 +269,7 @@ export default function App() {
           </div>
         </div>
         <div className="topbar-right">
-          <div className="system-title">Insurance Management System</div>
+          <div className="system-title">Ejarah Montly Instalment Calculator</div>
           <div className="logo-chip">
             <SaudiRiyalMark className="logo-mark" />
           </div>
