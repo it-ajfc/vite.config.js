@@ -202,7 +202,7 @@ export default function App() {
   const [newPercent, setNewPercent] = useState(60);
 
   const result = useMemo(() => {
-    const age = calculateAgeYears(form.dob)};
+    const age = calculateAgeYears(form.dob);
     const employmentMonths = calculateEmploymentMonths(form.employmentDate);
     const vat = form.carPriceExVat * (config.rules.vatRate / 100);
     const carPriceWithVat = form.carPriceExVat + vat;
