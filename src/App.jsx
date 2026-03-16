@@ -133,7 +133,18 @@ function calculateEmploymentMonths(dateStr) {
   if (today.getDate() < start.getDate()) months--;
   return Math.max(months, 0);
 }
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return "-";
 
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return dateStr;
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = String(date.getFullYear()).slice(-2);
+
+  return `${day} ${month} ${year}`;
+}
 function MetricCard({ label, children }) {
   return (
     <div className="metric-card">
@@ -191,7 +202,7 @@ export default function App() {
   const [newPercent, setNewPercent] = useState(60);
 
   const result = useMemo(() => {
-    const age = calculateAgeYears(form.dob);
+    const age = calculateAgeYears(form.dob)};
     const employmentMonths = calculateEmploymentMonths(form.employmentDate);
     const vat = form.carPriceExVat * (config.rules.vatRate / 100);
     const carPriceWithVat = form.carPriceExVat + vat;
